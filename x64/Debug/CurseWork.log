@@ -1,0 +1,9 @@
+﻿  CurseWork.cpp
+C:\Users\lova2\source\repos\CurseWork\CurseWork.cpp(33,15): warning C4244: 'initializing': conversion from '_Rep' to 'double', possible loss of data
+C:\Users\lova2\source\repos\CurseWork\CurseWork.cpp(33,15): warning C4244:         with
+C:\Users\lova2\source\repos\CurseWork\CurseWork.cpp(33,15): warning C4244:         [
+C:\Users\lova2\source\repos\CurseWork\CurseWork.cpp(33,15): warning C4244:             _Rep=__int64
+C:\Users\lova2\source\repos\CurseWork\CurseWork.cpp(33,15): warning C4244:         ]
+C:\Users\lova2\source\repos\CurseWork\CurseWork.cpp(66,20): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+C:\Users\lova2\source\repos\CurseWork\CurseWork.cpp(288,12): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+  CurseWork.vcxproj -> C:\Users\lova2\source\repos\CurseWork\x64\Debug\CurseWork.exe

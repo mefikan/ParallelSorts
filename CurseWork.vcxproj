@@ -127,7 +127,24 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="CurseWork.cpp" />
+    <ClCompile Include="batcher_sort.cpp" />
+    <ClCompile Include="main_file.cpp" />
+    <ClCompile Include="file_processing_functions.cpp" />
+    <ClCompile Include="printing_elements_stdout_stream.cpp" />
+    <ClCompile Include="sequential_sorts.cpp" />
+    <ClCompile Include="shell_parallel_sort.cpp" />
+    <ClCompile Include="timer.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="batcher_sort.h" />
+    <ClInclude Include="consts.h" />
+    <ClInclude Include="file_processing_functions.h" />
+    <ClInclude Include="includes.h" />
+    <ClInclude Include="printing_elements_stdout_stream.h" />
+    <ClInclude Include="sequential_sorts.h" />
+    <ClInclude Include="shell_parallel_sort.h" />
+    <ClInclude Include="thread_pool.h" />
+    <ClInclude Include="timer.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

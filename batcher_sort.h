@@ -6,7 +6,12 @@
 #include "file_processing_functions.h"
 #include "printing_elements_stdout_stream.h"
 
-void batcher_sort();
-bool is_array_sorted(int* array, int n);
-std::pair <int*, int*> merge_arrays_and_return_pointers_to_small_and_big_part(int* srcFirst, int* srcSecond, int arrSize);
+class batcher_sort
+{
+	int* base_buf;
+	static std::pair <int*, int*> merge_arrays_and_return_pointers_to_small_and_big_part(int* src_first, int* src_second, int arr_size);
+	void batcher_sort_func();
+public:
+	batcher_sort();
+};
 

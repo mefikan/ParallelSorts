@@ -1,5 +1,13 @@
 #include "file_processing_functions.h"
 
+void array_generator(int *arr, int n)
+{
+	srand(time(NULL));
+	for (int i = 0; i < num_count; i++)
+	{
+		arr[i] = rand() % 99 + 1;
+	}
+}
 void random_numbers_at_file()
 {
 	std::ofstream out(file_name);
@@ -14,6 +22,7 @@ void random_numbers_at_file()
 		out << (rand() % 100 + 1) << " ";
 	}
 	out.close();
+	std::cout << "File filled with numbers\n";
 }
 void file_write(int* arr)
 {
@@ -42,4 +51,5 @@ void file_read(int* arr)
 		in >> arr[i];
 	}
 	in.close();
+	std::cout << "File is readed succesfully\n";
 }

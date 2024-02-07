@@ -1,83 +1,89 @@
 #include "batcher_sort.h"
 
-std::pair <int*, int*> merge_arrays_and_return_pointers_to_small_and_big_part(int* srcFirst, int* srcSecond, int arrSize)
+batcher_sort::batcher_sort()
 {
-	int* bufferSmallBig = new int[arrSize * 2];
-	int indFirst = 0;
-	int indSecond = 0;
-	int indBuf = 0;
-	for (int i = 0; indFirst < arrSize && indSecond < arrSize; i++)
+	base_buf = new int[num_count];
+	//random_numbers_at_file();
+	//file_read(base_buf);
+	array_generator(base_buf);
+	batcher_sort_func();
+	//show_array(base_buf, num_count);
+}
+std::pair <int*, int*> batcher_sort::merge_arrays_and_return_pointers_to_small_and_big_part(int* src_first, int* src_second, int arr_size)
+{
+	int* buffer_small_big = new int[arr_size * 2];
+	int ind_first = 0;
+	int ind_second = 0;
+	int ind_buf = 0;
+	for (int i = 0; ind_first < arr_size && ind_second < arr_size; i++)
 	{
-		if (srcFirst[indFirst] < srcSecond[indSecond])
+		if (src_first[ind_first] < src_second[ind_second])
 		{
-			bufferSmallBig[indBuf++] = srcFirst[indFirst++];
+			buffer_small_big[ind_buf++] = src_first[ind_first++];
 		}
 		else
 		{
-			bufferSmallBig[indBuf++] = srcSecond[indSecond++];
+			buffer_small_big[ind_buf++] = src_second[ind_second++];
 		}
 	}
-	while (indFirst < arrSize)
+	while (ind_first < arr_size)
 	{
-		bufferSmallBig[indBuf++] = srcFirst[indFirst++];
+		buffer_small_big[ind_buf++] = src_first[ind_first++];
 	}
-	while (indSecond < arrSize)
+	while (ind_second < arr_size)
 	{
-		bufferSmallBig[indBuf++] = srcSecond[indSecond++];
+		buffer_small_big[ind_buf++] = src_second[ind_second++];
 	}
-	int* pbufferSmall = new int[arrSize];
-	int* pbufferBig = new int[arrSize];
-	for (int i = 0; i < arrSize; i++)
+	int* pbuffer_small = new int[arr_size];
+	int* pbuffer_big = new int[arr_size];
+	for (int i = 0; i < arr_size; i++)
 	{
-		pbufferSmall[i] = bufferSmallBig[i];
-		pbufferBig[i] = bufferSmallBig[i + arrSize];
+		pbuffer_small[i] = buffer_small_big[i];
+		pbuffer_big[i] = buffer_small_big[i + arr_size];
 	}
-	return std::make_pair(pbufferSmall, pbufferBig);
+	return std::make_pair(pbuffer_small, pbuffer_big);
 }
-void batcher_sort()
+void batcher_sort::batcher_sort_func()
 {
-	random_numbers_at_file();
-	int* baseBuf = new int[num_count];
-	file_read(baseBuf);
-	int countPerArray = std::ceil(num_count / 6.0);
-	int countLastArray = num_count - countPerArray * 5;
-	int** arrayMatrix = new int* [stream_count];
-	int baseBufInd = 0;
+	int count_per_array = std::ceil(num_count / 6.0);
+	int count_last_array = num_count - count_per_array * 5;
+	int** array_matrix = new int* [stream_count];
+	int base_buf_ind = 0;
 	for (int i = 0; i < stream_count; i++)
 	{
 		if (i == 5)
 		{
-			arrayMatrix[i] = new int[countPerArray];
-			int startInd = 0;
-			for (int j = 0; (countPerArray != countLastArray) && (j < countPerArray - countLastArray); j++)
+			array_matrix[i] = new int[count_per_array];
+			int start_ind = 0;
+			for (int j = 0; (count_per_array != count_last_array) && (j < count_per_array - count_last_array); j++)
 			{
-				arrayMatrix[i][j] = 0;
-				startInd++;
+				array_matrix[i][j] = 0;
+				start_ind++;
 			}
-			for (int j = startInd; j < countPerArray; j++)
+			for (int j = start_ind; j < count_per_array; j++)
 			{
-				arrayMatrix[i][j] = baseBuf[baseBufInd++];
+				array_matrix[i][j] = base_buf[base_buf_ind++];
 			}
 		}
 		else
 		{
-			arrayMatrix[i] = new int[countPerArray];
-			for (int j = 0; j < countPerArray; j++)
+			array_matrix[i] = new int[count_per_array];
+			for (int j = 0; j < count_per_array; j++)
 			{
-				arrayMatrix[i][j] = baseBuf[baseBufInd++];
+				array_matrix[i][j] = base_buf[base_buf_ind++];
 			}
 		}
 	}
 
-	//showMatrix(arrayMatrix, streamCount, countPerArray);
+	//showMatrix(arrayMatrix, streamCount, count_per_array);
 
 	timer* t = new timer();
-	std::thread* th1 = new std::thread(heap_sort, arrayMatrix[0], countPerArray);
-	std::thread* th2 = new std::thread(heap_sort, arrayMatrix[1], countPerArray);
-	std::thread* th3 = new std::thread(heap_sort, arrayMatrix[2], countPerArray);
-	std::thread* th4 = new std::thread(heap_sort, arrayMatrix[3], countPerArray);
-	std::thread* th5 = new std::thread(heap_sort, arrayMatrix[4], countPerArray);
-	std::thread* th6 = new std::thread(heap_sort, arrayMatrix[5], countPerArray);
+	std::thread* th1 = new std::thread(heap_sort, array_matrix[0], count_per_array);
+	std::thread* th2 = new std::thread(heap_sort, array_matrix[1], count_per_array);
+	std::thread* th3 = new std::thread(heap_sort, array_matrix[2], count_per_array);
+	std::thread* th4 = new std::thread(heap_sort, array_matrix[3], count_per_array);
+	std::thread* th5 = new std::thread(heap_sort, array_matrix[4], count_per_array);
+	std::thread* th6 = new std::thread(heap_sort, array_matrix[5], count_per_array);
 
 	th1->join();
 	th2->join();
@@ -88,137 +94,137 @@ void batcher_sort()
 
 	//получение отсортированных подмассивов вычислением на 6 потоках, а далее слияние:
 
-	//showMatrix(arrayMatrix, streamCount, countPerArray);
+	//showMatrix(arrayMatrix, streamCount, count_per_array);
 
 	// Тут сделана обработка данных сетью за 5 шагов, это как гонки в быках и коровах, чем меньше шагов, тем лучше
 	// step 1 
-	th1 = new std::thread([&arrayMatrix](int countPerArray) {
-		std::pair <int*, int*> buffpair;
-		int indFirst = 0;
-		int indSecond = 1;
-		buffpair = merge_arrays_and_return_pointers_to_small_and_big_part(arrayMatrix[indFirst], arrayMatrix[indSecond], countPerArray);
-		arrayMatrix[indFirst] = buffpair.first;
-		arrayMatrix[indSecond] = buffpair.second;
-		}, countPerArray);
-	th2 = new std::thread([&arrayMatrix](int countPerArray) {
-		std::pair <int*, int*> buffpair;
-		int indFirst = 2;
-		int indSecond = 3;
-		buffpair = merge_arrays_and_return_pointers_to_small_and_big_part(arrayMatrix[indFirst], arrayMatrix[indSecond], countPerArray);
-		arrayMatrix[indFirst] = buffpair.first;
-		arrayMatrix[indSecond] = buffpair.second;
-		}, countPerArray);
-	th3 = new std::thread([&arrayMatrix](int countPerArray) {
-		std::pair <int*, int*> buffpair;
-		int indFirst = 4;
-		int indSecond = 5;
-		buffpair = merge_arrays_and_return_pointers_to_small_and_big_part(arrayMatrix[indFirst], arrayMatrix[indSecond], countPerArray);
-		arrayMatrix[indFirst] = buffpair.first;
-		arrayMatrix[indSecond] = buffpair.second;
-		}, countPerArray);
+	th1 = new std::thread([&array_matrix](int count_per_array) {
+		std::pair <int*, int*> buff_pair;
+		int ind_first = 0;
+		int ind_second = 1;
+		buff_pair = merge_arrays_and_return_pointers_to_small_and_big_part(array_matrix[ind_first], array_matrix[ind_second], count_per_array);
+		array_matrix[ind_first] = buff_pair.first;
+		array_matrix[ind_second] = buff_pair.second;
+		}, count_per_array);
+	th2 = new std::thread([&array_matrix](int count_per_array) {
+		std::pair <int*, int*> buff_pair;
+		int ind_first = 2;
+		int ind_second = 3;
+		buff_pair = merge_arrays_and_return_pointers_to_small_and_big_part(array_matrix[ind_first], array_matrix[ind_second], count_per_array);
+		array_matrix[ind_first] = buff_pair.first;
+		array_matrix[ind_second] = buff_pair.second;
+		}, count_per_array);
+	th3 = new std::thread([&array_matrix](int count_per_array) {
+		std::pair <int*, int*> buff_pair;
+		int ind_first = 4;
+		int ind_second = 5;
+		buff_pair = merge_arrays_and_return_pointers_to_small_and_big_part(array_matrix[ind_first], array_matrix[ind_second], count_per_array);
+		array_matrix[ind_first] = buff_pair.first;
+		array_matrix[ind_second] = buff_pair.second;
+		}, count_per_array);
 	th1->join();
 	th2->join();
 	th3->join();
 
 	// step 2
-	th1 = new std::thread([&arrayMatrix](int countPerArray) {
-		std::pair <int*, int*> buffpair;
-		int indFirst = 0;
-		int indSecond = 2;
-		buffpair = merge_arrays_and_return_pointers_to_small_and_big_part(arrayMatrix[indFirst], arrayMatrix[indSecond], countPerArray);
-		arrayMatrix[indFirst] = buffpair.first;
-		arrayMatrix[indSecond] = buffpair.second;
-		}, countPerArray);
-	th2 = new std::thread([&arrayMatrix](int countPerArray) {
-		std::pair <int*, int*> buffpair;
-		int indFirst = 3;
-		int indSecond = 5;
-		buffpair = merge_arrays_and_return_pointers_to_small_and_big_part(arrayMatrix[indFirst], arrayMatrix[indSecond], countPerArray);
-		arrayMatrix[indFirst] = buffpair.first;
-		arrayMatrix[indSecond] = buffpair.second;
-		}, countPerArray);
-	th3 = new std::thread([&arrayMatrix](int countPerArray) {
-		std::pair <int*, int*> buffpair;
-		int indFirst = 1;
-		int indSecond = 4;
-		buffpair = merge_arrays_and_return_pointers_to_small_and_big_part(arrayMatrix[indFirst], arrayMatrix[indSecond], countPerArray);
-		arrayMatrix[indFirst] = buffpair.first;
-		arrayMatrix[indSecond] = buffpair.second;
-		}, countPerArray);
+	th1 = new std::thread([&array_matrix](int count_per_array) {
+		std::pair <int*, int*> buff_pair;
+		int ind_first = 0;
+		int ind_second = 2;
+		buff_pair = merge_arrays_and_return_pointers_to_small_and_big_part(array_matrix[ind_first], array_matrix[ind_second], count_per_array);
+		array_matrix[ind_first] = buff_pair.first;
+		array_matrix[ind_second] = buff_pair.second;
+		}, count_per_array);
+	th2 = new std::thread([&array_matrix](int count_per_array) {
+		std::pair <int*, int*> buff_pair;
+		int ind_first = 3;
+		int ind_second = 5;
+		buff_pair = merge_arrays_and_return_pointers_to_small_and_big_part(array_matrix[ind_first], array_matrix[ind_second], count_per_array);
+		array_matrix[ind_first] = buff_pair.first;
+		array_matrix[ind_second] = buff_pair.second;
+		}, count_per_array);
+	th3 = new std::thread([&array_matrix](int count_per_array) {
+		std::pair <int*, int*> buff_pair;
+		int ind_first = 1;
+		int ind_second = 4;
+		buff_pair = merge_arrays_and_return_pointers_to_small_and_big_part(array_matrix[ind_first], array_matrix[ind_second], count_per_array);
+		array_matrix[ind_first] = buff_pair.first;
+		array_matrix[ind_second] = buff_pair.second;
+		}, count_per_array);
 	th1->join();
 	th2->join();
 	th3->join();
 
 	//step 3 
-	th1 = new std::thread([&arrayMatrix](int countPerArray) {
-		std::pair <int*, int*> buffpair;
-		int indFirst = 0;
-		int indSecond = 1;
-		buffpair = merge_arrays_and_return_pointers_to_small_and_big_part(arrayMatrix[indFirst], arrayMatrix[indSecond], countPerArray);
-		arrayMatrix[indFirst] = buffpair.first;
-		arrayMatrix[indSecond] = buffpair.second;
-		}, countPerArray);
-	th2 = new std::thread([&arrayMatrix](int countPerArray) {
-		std::pair <int*, int*> buffpair;
-		int indFirst = 2;
-		int indSecond = 3;
-		buffpair = merge_arrays_and_return_pointers_to_small_and_big_part(arrayMatrix[indFirst], arrayMatrix[indSecond], countPerArray);
-		arrayMatrix[indFirst] = buffpair.first;
-		arrayMatrix[indSecond] = buffpair.second;
-		}, countPerArray);
-	th3 = new std::thread([&arrayMatrix](int countPerArray) {
-		std::pair <int*, int*> buffpair;
-		int indFirst = 4;
-		int indSecond = 5;
-		buffpair = merge_arrays_and_return_pointers_to_small_and_big_part(arrayMatrix[indFirst], arrayMatrix[indSecond], countPerArray);
-		arrayMatrix[indFirst] = buffpair.first;
-		arrayMatrix[indSecond] = buffpair.second;
-		}, countPerArray);
+	th1 = new std::thread([&array_matrix](int count_per_array) {
+		std::pair <int*, int*> buff_pair;
+		int ind_first = 0;
+		int ind_second = 1;
+		buff_pair = merge_arrays_and_return_pointers_to_small_and_big_part(array_matrix[ind_first], array_matrix[ind_second], count_per_array);
+		array_matrix[ind_first] = buff_pair.first;
+		array_matrix[ind_second] = buff_pair.second;
+		}, count_per_array);
+	th2 = new std::thread([&array_matrix](int count_per_array) {
+		std::pair <int*, int*> buff_pair;
+		int ind_first = 2;
+		int ind_second = 3;
+		buff_pair = merge_arrays_and_return_pointers_to_small_and_big_part(array_matrix[ind_first], array_matrix[ind_second], count_per_array);
+		array_matrix[ind_first] = buff_pair.first;
+		array_matrix[ind_second] = buff_pair.second;
+		}, count_per_array);
+	th3 = new std::thread([&array_matrix](int count_per_array) {
+		std::pair <int*, int*> buff_pair;
+		int ind_first = 4;
+		int ind_second = 5;
+		buff_pair = merge_arrays_and_return_pointers_to_small_and_big_part(array_matrix[ind_first], array_matrix[ind_second], count_per_array);
+		array_matrix[ind_first] = buff_pair.first;
+		array_matrix[ind_second] = buff_pair.second;
+		}, count_per_array);
 	th1->join();
 	th2->join();
 	th3->join();
 
 	// step 4
-	th1 = new std::thread([&arrayMatrix](int countPerArray) {
-		std::pair <int*, int*> buffpair;
-		int indFirst = 1;
-		int indSecond = 2;
-		buffpair = merge_arrays_and_return_pointers_to_small_and_big_part(arrayMatrix[indFirst], arrayMatrix[indSecond], countPerArray);
-		arrayMatrix[indFirst] = buffpair.first;
-		arrayMatrix[indSecond] = buffpair.second;
-		}, countPerArray);
-	th2 = new std::thread([&arrayMatrix](int countPerArray) {
-		std::pair <int*, int*> buffpair;
-		int indFirst = 3;
-		int indSecond = 4;
-		buffpair = merge_arrays_and_return_pointers_to_small_and_big_part(arrayMatrix[indFirst], arrayMatrix[indSecond], countPerArray);
-		arrayMatrix[indFirst] = buffpair.first;
-		arrayMatrix[indSecond] = buffpair.second;
-		}, countPerArray);
+	th1 = new std::thread([&array_matrix](int count_per_array) {
+		std::pair <int*, int*> buff_pair;
+		int ind_first = 1;
+		int ind_second = 2;
+		buff_pair = merge_arrays_and_return_pointers_to_small_and_big_part(array_matrix[ind_first], array_matrix[ind_second], count_per_array);
+		array_matrix[ind_first] = buff_pair.first;
+		array_matrix[ind_second] = buff_pair.second;
+		}, count_per_array);
+	th2 = new std::thread([&array_matrix](int count_per_array) {
+		std::pair <int*, int*> buff_pair;
+		int ind_first = 3;
+		int ind_second = 4;
+		buff_pair = merge_arrays_and_return_pointers_to_small_and_big_part(array_matrix[ind_first], array_matrix[ind_second], count_per_array);
+		array_matrix[ind_first] = buff_pair.first;
+		array_matrix[ind_second] = buff_pair.second;
+		}, count_per_array);
 	th1->join();
 	th2->join();
 
 	// step 5
-	th1 = new std::thread([&arrayMatrix](int countPerArray) {
-		std::pair <int*, int*> buffpair;
-		int indFirst = 2;
-		int indSecond = 3;
-		buffpair = merge_arrays_and_return_pointers_to_small_and_big_part(arrayMatrix[indFirst], arrayMatrix[indSecond], countPerArray);
-		arrayMatrix[indFirst] = buffpair.first;
-		arrayMatrix[indSecond] = buffpair.second;
-		}, countPerArray);
+	th1 = new std::thread([&array_matrix](int count_per_array) {
+		std::pair <int*, int*> buff_pair;
+		int ind_first = 2;
+		int ind_second = 3;
+		buff_pair = merge_arrays_and_return_pointers_to_small_and_big_part(array_matrix[ind_first], array_matrix[ind_second], count_per_array);
+		array_matrix[ind_first] = buff_pair.first;
+		array_matrix[ind_second] = buff_pair.second;
+		}, count_per_array);
 	th1->join();
 	delete t;
-	//showMatrix(arrayMatrix, streamCount, countPerArray);
+	//showMatrix(arrayMatrix, streamCount, count_per_array);
 	int ind = 0;
 	for (int i = 0; i < stream_count; i++)
 	{
-		for (int j = 0; j < countPerArray; j++)
+		for (int j = 0; j < count_per_array; j++)
 		{
-			baseBuf[ind++] = arrayMatrix[i][j];
+			base_buf[ind++] = array_matrix[i][j];
 		}
 	}
-	if (is_array_sorted(baseBuf, num_count))
+	if (is_array_sorted(base_buf, num_count))
 	{
 		std::cout << "SORT OK!\n";
 	}
@@ -228,15 +234,4 @@ void batcher_sort()
 	}
 	//showArray(baseBuf, numCount);
 
-}
-bool is_array_sorted(int* array, int n)
-{
-	int prev = array[0];
-	for (int i = 1; i < n; i++)
-	{
-		if (array[i] < prev)
-			return 0;
-		prev = array[i];
-	}
-	return 1;
 }

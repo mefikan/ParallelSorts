@@ -1,3 +1,4 @@
+#pragma once
 #include "includes.h"
 
 class thread_pool {

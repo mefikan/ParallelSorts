@@ -1,8 +1,9 @@
-﻿# CMakeList.txt: проект CMake для ParallelSorts; включите исходный код и определения,
-# укажите здесь логику для конкретного проекта.
-#
+﻿cmake_minimum_required(VERSION 3.27)
 
-# Добавьте источник в исполняемый файл этого проекта.
+set(CMAKE_CXX_STANDARD 17)
+
+project(ParallelSorts)
+
 add_executable (ParallelSorts "src/main.cpp" "src/batcher_sort.h" "src/batcher_sort.cpp" "src/timer.h" "src/timer.cpp"
         src/sequential_sorts.cpp
         src/sequential_sorts.h
@@ -13,10 +14,11 @@ add_executable (ParallelSorts "src/main.cpp" "src/batcher_sort.h" "src/batcher_s
         src/show.cpp
         src/check.h
         src/check.cpp
+        src/element.cpp
+        src/element.h
+        src/new_batcher.cpp
+        src/new_batcher.h
+        src/threadpool.h
 )
-
-if (CMAKE_VERSION VERSION_GREATER 3.12)
-  set_property(TARGET ParallelSorts PROPERTY CXX_STANDARD 20)
-endif()
 
 # TODO: Добавьте тесты и целевые объекты, если это необходимо.

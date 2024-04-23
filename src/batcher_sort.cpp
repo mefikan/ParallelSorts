@@ -4,25 +4,25 @@ void batcher_sort::sort_6_processors()
 {
     stream_count = 6;
     batcher_sort_func_6_processors();
-    //show_array(base_buf, num_count);
+    //show_array(base_buf, NUM_COUNT);
 }
 void batcher_sort::sort_16_processors()
 {
     stream_count = 16;
-    const int count_per_array = num_count/16 + 1;
+    const int count_per_array = NUM_COUNT / 16 + 1;
 
-    //show_array(base_buf, num_count);
+    //show_array(base_buf, NUM_COUNT);
 }
 void batcher_sort::show_array_batcher()
 {
-    show_array(base_buf, num_count);
+    show_array(base_buf, NUM_COUNT);
 }
 batcher_sort::batcher_sort()
 {
-	base_buf = new int[num_count];
+	base_buf = new int[NUM_COUNT];
 	//random_numbers_at_file();
 	//file_read(base_buf);
-    array_generator(base_buf, num_count);
+    array_generator(base_buf, NUM_COUNT);
 }
 std::pair <int*, int*> batcher_sort::merge_arrays_and_return_pointers_to_small_and_big_part(int* src_first, int* src_second, int arr_size)
 {
@@ -60,9 +60,9 @@ std::pair <int*, int*> batcher_sort::merge_arrays_and_return_pointers_to_small_a
 }
 void batcher_sort::batcher_sort_func_6_processors()
 {
-	const int count_per_array = std::ceil(num_count / 6.0);
+	const int count_per_array = std::ceil(NUM_COUNT / 6.0);
     std::cout << "count per array: " << count_per_array << '\n'; //debug
-	const int count_last_array = abs(num_count - count_per_array * 5);
+	const int count_last_array = abs(NUM_COUNT - count_per_array * 5);
     std::cout << "count last array: " << count_last_array << '\n'; //debug
 	int** array_matrix = new int* [stream_count];
 	int base_buf_ind = 0;
@@ -239,7 +239,7 @@ void batcher_sort::batcher_sort_func_6_processors()
 			base_buf[ind++] = array_matrix[i][j];
 		}
 	}
-	if (is_array_sorted(base_buf, num_count))
+	if (is_array_sorted(base_buf, NUM_COUNT))
 	{
 		std::cout << "SORT OK!\n";
 	}
@@ -248,16 +248,5 @@ void batcher_sort::batcher_sort_func_6_processors()
 		std::cout << "NOT SORTED!\n";
 	}
 	//showArray(baseBuf, numCount);
-
-}
-
-template <class T>
-NewBatcher<T>::NewBatcher(T &buf)
-{
-    buffer = buf;
-}
-template <class T>
-NewBatcher<T>::NewBatcher()
-{
 
 }

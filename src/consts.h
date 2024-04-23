@@ -4,9 +4,9 @@
 #include <string>
 
 namespace {
-    const int num_count = 74;
+    const int NUM_COUNT = 111;
     //const int stream_count = 6;
-    const std::string file_name = "file.txt";
+    const std::string FILE_NAME = "file.txt";
 }
 
 

@@ -24,13 +24,5 @@ public:
     void show_array_batcher();
 };
 
-template <class T>
-class NewBatcher
-{
-    T *buffer;
-public:
-    NewBatcher();
-    NewBatcher(T &buf);
-};
 
 #endif //BATCHER_SORT_H

@@ -1,13 +1,13 @@
 #include <iostream>
 #include <vector>
+
+#include "new_batcher.h"
 #include "batcher_sort.h"
 
 int main()
 {
-    batcher_sort sort;
-    sort.show_array_batcher();
-    sort.sort_6_processors();
-    sort.show_array_batcher();
+    new_batcher b;
+    b.sort_6_processors();
 
 	return 0;
 }

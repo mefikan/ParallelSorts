@@ -12,21 +12,21 @@ template <class T> void array_generator_(T *arr, int n)
 void array_generator(int* arr, int n)
 {
     srand(time(NULL));
-    for (int i = 0; i < num_count; i++)
+    for (int i = 0; i < NUM_COUNT; i++)
     {
         arr[i] = rand() % 99 + 1;
     }
 }
 void random_numbers_at_file()
 {
-    std::ofstream out(file_name);
+    std::ofstream out(FILE_NAME);
     srand(time(NULL));
     if (!out.is_open())
     {
         std::cout << "Error with opening file!";
         return;
     }
-    for (size_t i = 0; i < num_count; i++)
+    for (size_t i = 0; i < NUM_COUNT; i++)
     {
         out << (rand() % 100 + 1) << " ";
     }
@@ -35,13 +35,13 @@ void random_numbers_at_file()
 }
 void file_write(int* arr)
 {
-    std::ofstream out(file_name);
+    std::ofstream out(FILE_NAME);
     if (!out.is_open())
     {
         std::cout << "Error with opening file!";
         return;
     }
-    for (int i = 0; i < num_count; i++)
+    for (int i = 0; i < NUM_COUNT; i++)
     {
         out << *(arr + i) << " ";
     }
@@ -49,13 +49,13 @@ void file_write(int* arr)
 }
 void file_read(int* arr)
 {
-    std::ifstream in(file_name);
+    std::ifstream in(FILE_NAME);
     if (!in.is_open())
     {
         std::cout << "Error with opening file!";
         return;
     }
-    for (size_t i = 0; i < num_count; i++)
+    for (size_t i = 0; i < NUM_COUNT; i++)
     {
         in >> arr[i];
     }

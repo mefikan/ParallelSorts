@@ -12,7 +12,8 @@ add_executable (ParallelSorts "src/main.cpp" "src/batcher_sort.h" "src/batcher_s
         src/show.h
         src/show.cpp
         src/check.h
-        src/check.cpp)
+        src/check.cpp
+)
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET ParallelSorts PROPERTY CXX_STANDARD 20)

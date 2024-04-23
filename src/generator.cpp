@@ -1,5 +1,14 @@
 #include "generator.h"
 
+template <class T> void array_generator_(T *arr, int n)
+{
+    srand(time(NULL));
+    for (auto c : arr)
+    {
+        //c = rand() % 99 + 1;
+    }
+}
+
 void array_generator(int* arr, int n)
 {
     srand(time(NULL));

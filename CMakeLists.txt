@@ -4,7 +4,7 @@ set(CMAKE_CXX_STANDARD 17)
 
 project(ParallelSorts)
 
-add_executable (ParallelSorts "src/main.cpp" "src/batcher_sort.h" "src/batcher_sort.cpp" "src/timer.h" "src/timer.cpp"
+add_executable (ParallelSorts "src/main.cpp" "src/batcher_sort.h" "src/batcher_sort.cpp" "src/timer_common.h" "src/timer_common.cpp"
         src/sequential_sorts.cpp
         src/sequential_sorts.h
         src/generator.h
@@ -18,7 +18,8 @@ add_executable (ParallelSorts "src/main.cpp" "src/batcher_sort.h" "src/batcher_s
         src/element.h
         src/new_batcher.cpp
         src/new_batcher.h
-        src/threadpool.h
+        src/thread_pool.cpp
+        src/timer_pool.cpp
 )
 
 # TODO: Добавьте тесты и целевые объекты, если это необходимо.

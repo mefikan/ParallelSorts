@@ -1,10 +1,10 @@
-#include "timer.h"
+#include "timer_common.h"
 
-timer::timer()
+timer_common::timer_common()
 {
     start = std::chrono::steady_clock::now();
 }
-timer::~timer()
+timer_common::~timer_common()
 {
 	end = std::chrono::steady_clock::now();
 	double time = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count();

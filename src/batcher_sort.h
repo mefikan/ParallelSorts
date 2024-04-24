@@ -5,7 +5,7 @@
 #include <thread>
 #include <cmath>
 
-#include "timer.h"
+#include "timer_common.h"
 #include "sequential_sorts.h"
 #include "generator.h"
 #include "show.h"

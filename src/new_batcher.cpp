@@ -8,8 +8,24 @@ new_batcher::new_batcher(int num_count)
 {
     arr.resize(num_count);
 }
+bool new_batcher::is_array_sorted_()
+{
+    int n = this->arr.size();
+    int prev =this->arr[0].getKey();
+    for (int i = 1; i < n; i++)
+    {
+        if (this->arr[i].getKey() < prev)
+        {
+            std::cout << "Error at! " <<this->arr[i].getKey() << " - " << prev << "\n";
+            return 0;
+        }
+        prev = this->arr[i].getKey();
+    }
+    return 1;
+}
 void new_batcher::sort_6_processors()
 {
+    int task_index=0;
     num_generate();
     count_per_piece = ceil(arr.size()/6.0);
     int count_added_zeroes = abs(arr.size() - count_per_piece*6);
@@ -18,19 +34,69 @@ void new_batcher::sort_6_processors()
         arr.emplace_back(0);
     }
     std::cout << "1) now size is " << arr.size() << "\n2) count_per_piece "<< count_per_piece << "\n3) count_added_zeroes is "<< count_added_zeroes << std::endl;
-    print_array();
+    //print_array();
 
+    timer_common *t = new timer_common();
+    struct sort_piece : public MT::Task {
+        int coef;
+        new_batcher *batch;
+        sort_piece(const std::string &id, new_batcher &b, int cof) : Task(id), batch(&b), coef(cof) {};
+        void one_thread_method() override {
+            heap_sort_(batch->arr, coef * batch->get_count_per_piece(), batch->get_count_per_piece());
+        }
+    };
+    struct merge_pieces : public MT::Task {
+        int coef_1;
+        int coef_2;
+        new_batcher *batch;
+        merge_pieces(const std::string &id, new_batcher &b, int cof1, int cof2) : Task(id), batch(&b), coef_1(cof1), coef_2(cof2)  {};
+        void one_thread_method() override {
+            batch->merge_2_arrays(coef_1*batch->count_per_piece, coef_2*batch->count_per_piece);
+        }
+    };
 
-    heap_sort_(this->arr, 0*this->get_count_per_piece(), this->get_count_per_piece());
-    heap_sort_(this->arr, 1*this->get_count_per_piece(), this->get_count_per_piece());
-    heap_sort_(this->arr, 2*this->get_count_per_piece(), this->get_count_per_piece());
-    heap_sort_(this->arr, 3*this->get_count_per_piece(), this->get_count_per_piece());
-    heap_sort_(this->arr, 4*this->get_count_per_piece(), this->get_count_per_piece());
-    heap_sort_(this->arr, 5*this->get_count_per_piece(), this->get_count_per_piece());
+    MT::ThreadPool pool(8);
+    pool.set_logger_flag(false);
+    pool.start();
 
-    print_array();
+    //sorting 6 pieces in parallel
+    for (int i=0;i<6;i++)
+    {
+        pool.add_task(sort_piece("TestTask_" + std::to_string(task_index++), *this, i));
+    }
+    pool.wait();
 
-    merge_2_arrays(0*count_per_piece, 1*count_per_piece);
+    pool.add_task(merge_pieces("TestTask_" + std::to_string(task_index++),*this,0, 1));
+    pool.add_task(merge_pieces("TestTask_" + std::to_string(task_index++),*this,2, 3));
+    pool.add_task(merge_pieces("TestTask_" + std::to_string(task_index++),*this,4, 5));
+    pool.wait();
+
+    pool.add_task(merge_pieces("TestTask_" + std::to_string(task_index++),*this,0, 2));
+    pool.add_task(merge_pieces("TestTask_" + std::to_string(task_index++),*this,3, 5));
+    pool.add_task(merge_pieces("TestTask_" + std::to_string(task_index++),*this,1, 4));
+    pool.wait();
+
+    pool.add_task(merge_pieces("TestTask_" + std::to_string(task_index++),*this,0, 1));
+    pool.add_task(merge_pieces("TestTask_" + std::to_string(task_index++),*this,2, 3));
+    pool.add_task(merge_pieces("TestTask_" + std::to_string(task_index++),*this,4, 5));
+    pool.wait();
+
+    pool.add_task(merge_pieces("TestTask_" + std::to_string(task_index++),*this,1, 2));
+    pool.add_task(merge_pieces("TestTask_" + std::to_string(task_index++),*this,3, 4));
+    pool.wait();
+    pool.add_task(merge_pieces("TestTask_" + std::to_string(task_index++),*this,2, 3));
+    pool.wait();
+
+    delete t;
+
+    if (this->is_array_sorted_())
+    {
+        std::cout << "Array is sorted!\n";
+    }
+    else
+    {
+        std::cout << "Not sorted!\n";
+    }
 }
 void new_batcher::num_generate()
 {
@@ -78,21 +144,12 @@ void new_batcher::merge_2_arrays(const unsigned int &start1, const unsigned int 
         arr[j+start1] = buffer[j];
         arr[j+start2] = buffer[j+count_per_piece];
     }
-    for (int g=0;g<buffer.size();g++)
-    {
-        if (g==buffer.size()/2)
-        {
-            std::cout << "\n";
-        }
-
-        std::cout << buffer[g].getKey() << " ";
-    }
 }
 void new_batcher::print_array()
 {
     for (int i=0;i<arr.size();i++)
     {
-        std::cout << (i!=0 && i%count_per_piece==0 ?  "\n" :  "");
+        //std::cout << (i!=0 && i%count_per_piece==0 ?  "\n" :  "");
         std::cout << std::setw(3) <<arr[i].getKey() << " ";
     }
     std::cout << "\n\n";

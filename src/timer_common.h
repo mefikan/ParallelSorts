@@ -5,13 +5,13 @@
 #include <chrono>
 #include <iomanip>
 
-class timer
+class timer_common
 {
 	std::chrono::steady_clock::time_point start;
 	std::chrono::steady_clock::time_point end;
 	std::chrono::high_resolution_clock clock;
 public:
-	timer();
-	~timer();
+	timer_common();
+	~timer_common();
 };
 #endif //TIMER_H

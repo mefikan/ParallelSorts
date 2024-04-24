@@ -62,17 +62,18 @@ void batcher_sort::batcher_sort_func_6_processors()
 {
 	const int count_per_array = std::ceil(NUM_COUNT / 6.0);
     std::cout << "count per array: " << count_per_array << '\n'; //debug
-	const int count_last_array = abs(NUM_COUNT - count_per_array * 5);
+    const int count_last_array = abs(NUM_COUNT - count_per_array * 5);
     std::cout << "count last array: " << count_last_array << '\n'; //debug
 	int** array_matrix = new int* [stream_count];
 	int base_buf_ind = 0;
 
     //separating buffer into parts
+    timer_common* t = new timer_common();
 	for (int i = 0; i < stream_count; i++)
 	{
 		if (i == 5)
 		{
-			array_matrix[i] = new int[count_last_array];
+			array_matrix[i] = new int[count_per_array];
 			int start_ind = 0;
 			for (int j = 0; (count_per_array != count_last_array) && (j < count_per_array - count_last_array); j++)
 			{
@@ -95,7 +96,6 @@ void batcher_sort::batcher_sort_func_6_processors()
 	}
 
     //main sort of algorithm
-	timer* t = new timer();
 	std::thread* th1 = new std::thread(heap_sort, array_matrix[0], count_per_array);
 	std::thread* th2 = new std::thread(heap_sort, array_matrix[1], count_per_array);
 	std::thread* th3 = new std::thread(heap_sort, array_matrix[2], count_per_array);

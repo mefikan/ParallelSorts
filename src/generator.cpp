@@ -17,9 +17,9 @@ void array_generator(int* arr, int n)
         arr[i] = rand() % 999 + 1;
     }
 }
-void random_numbers_at_file()
+void random_numbers_at_file(std::string file_name)
 {
-    std::ofstream out(FILE_NAME);
+    std::ofstream out(file_name);
     srand(time(NULL));
     if (!out.is_open())
     {
@@ -28,14 +28,14 @@ void random_numbers_at_file()
     }
     for (size_t i = 0; i < NUM_COUNT; i++)
     {
-        out << (rand() % 100 + 1) << " ";
+        out << (rand() % 10000 + 1) << " ";
     }
     out.close();
     std::cout << "File filled with numbers\n";
 }
-void file_write(int* arr)
+void file_write(int* arr, std::string file_name)
 {
-    std::ofstream out(FILE_NAME);
+    std::ofstream out(file_name);
     if (!out.is_open())
     {
         std::cout << "Error with opening file!";
@@ -47,9 +47,9 @@ void file_write(int* arr)
     }
     out.close();
 }
-void file_read(int* arr)
+void file_read(int* arr, std::string file_name)
 {
-    std::ifstream in(FILE_NAME);
+    std::ifstream in(file_name);
     if (!in.is_open())
     {
         std::cout << "Error with opening file!";

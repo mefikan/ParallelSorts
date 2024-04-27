@@ -1,8 +1,10 @@
-#include "final_batcher.h"
+#include "batcher_default_merge.h"
 
-void final_batcher::sort_16() {
+void batcher_default_merge::sort_16() {
     count_per_piece = ceil(arr_size/16.0);
-    num_generate();
+    //num_generate();
+    random_numbers_at_file("in.txt");
+    file_read(arr, "in.txt");
     stream_count=16;
     timer_common *timer = new timer_common;
 
@@ -67,18 +69,19 @@ void final_batcher::sort_16() {
     {
         std::cout << "Not sorted!\n";
     }
+    file_write(arr, "out.txt");
 }
-void final_batcher::num_generate() {
+void batcher_default_merge::num_generate() {
     std::random_device rd;
     std::mt19937 mt(rd());
-    std::uniform_int_distribution<int> dist(1, 1000);
+    std::uniform_int_distribution<int> dist(1, 100000);
     for (int i = 0;i < arr_size; i++)
     {
         arr[i] = (dist(mt));
     }
     std::cout << "Numbers generated!\n";
 }
-void final_batcher::merge_2_arrays(const unsigned int &start1, const unsigned int &start2) {
+void batcher_default_merge::merge_2_arrays(const unsigned int &start1, const unsigned int &start2) {
     //end index included
     //first will have the biggest elements part
     std::vector <int> buffer(count_per_piece*2);
@@ -108,7 +111,7 @@ void final_batcher::merge_2_arrays(const unsigned int &start1, const unsigned in
         arr[j+start2] = buffer[j+count_per_piece];
     }
 }
-void final_batcher::print_array() {
+void batcher_default_merge::print_array() {
     for (int i=0;i<arr_size;i++)
     {
         //std::cout << (i!=0 && i%count_per_piece==0 ?  "\n" :  "");

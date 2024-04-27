@@ -14,7 +14,7 @@ void array_generator(int* arr, int n)
     srand(time(NULL));
     for (int i = 0; i < NUM_COUNT; i++)
     {
-        arr[i] = rand() % 99 + 1;
+        arr[i] = rand() % 999 + 1;
     }
 }
 void random_numbers_at_file()

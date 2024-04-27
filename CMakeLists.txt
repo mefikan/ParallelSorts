@@ -20,6 +20,8 @@ add_executable (ParallelSorts "src/main.cpp" "src/batcher_sort.h" "src/batcher_s
         src/new_batcher.h
         src/thread_pool.cpp
         src/timer_pool.cpp
+        src/final_batcher.cpp
+        src/final_batcher.h
 )
 
 # TODO: Добавьте тесты и целевые объекты, если это необходимо.

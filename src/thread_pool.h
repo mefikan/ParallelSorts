@@ -118,10 +118,10 @@ namespace MT {
 		std::mutex completed_tasks_mutex;
 		std::mutex signal_queue_mutex;
 
-		// mutex blocking serial output logger
+		// mutex_ blocking serial output logger
 		std::mutex logger_mutex;
 
-		// mutex blocking functions waiting for results (wait* methods)
+		// mutex_ blocking functions waiting for results (wait* methods)
 		std::mutex wait_mutex;
 
 		std::condition_variable tasks_access;

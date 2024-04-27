@@ -6,9 +6,10 @@
 #include <string>
 
 class Element {
-    unsigned int key;
     std::string data;
 public:
+    void num_generate();
+    unsigned int key;
     void setKey(unsigned int x);
     unsigned int getKey();
     Element(unsigned int key_);

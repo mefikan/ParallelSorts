@@ -57,7 +57,7 @@ int* heap_sort(int* arr, int n)
     }
     return arr;
 }
-void build_max_heap_(std::vector <Element> &arr, int n) noexcept
+void build_max_heap_(std::vector <Element> &arr, int n)
 {
     for (int i = 1; i < n; i++)
     {
@@ -72,7 +72,7 @@ void build_max_heap_(std::vector <Element> &arr, int n) noexcept
         }
     }
 }
-void heap_sort_(std::vector <Element> &arr_, int start, int n) noexcept
+void heap_sort_(std::vector <Element> &arr_, int start, int n)
 {
     std::vector <Element> arr(n);
     for (int i=0;i<n;i++)

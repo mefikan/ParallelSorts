@@ -1,6 +1,7 @@
 #ifndef TIMER_H
 #define TIMER_H
 
+
 #include <iostream>
 #include <chrono>
 #include <iomanip>
@@ -14,4 +15,5 @@ public:
 	timer_common();
 	~timer_common();
 };
+
 #endif //TIMER_H

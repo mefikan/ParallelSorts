@@ -5,7 +5,7 @@
 #include <string>
 
 namespace {
-    const int NUM_COUNT = 10'000'000;
+    const int NUM_COUNT = 16;
     const std::string FILE_NAME = "file.txt";
 }
 

@@ -14,6 +14,8 @@ add_executable (ParallelSorts "src/main.cpp" "src/timer_common.h" "src/timer_com
         src/check.cpp
         src/batcher_default_merge.cpp
         src/batcher_default_merge.h
+        src/batcher_true_merge.cpp
+        src/batcher_true_merge.h
 )
 
 # TODO: Добавьте тесты и целевые объекты, если это необходимо.

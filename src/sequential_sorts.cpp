@@ -33,8 +33,10 @@ void shell_sort(int a[], int n)
         }
     }
 }
-int* heap_sort(int* arr, int n)
+int* heap_sort_asc(int* arr, int n)
 {
+    if (n<=1)
+        return arr;
     build_max_heap(arr, n);
 
     for (int i = n - 1; i > 0; i--)
@@ -49,6 +51,47 @@ int* heap_sort(int* arr, int n)
                 index++;
 
             if (index < i && arr[j] < arr[index])
+                std::swap(arr[j], arr[index]);
+
+            j = index;
+
+        } while (index < i);
+    }
+    return arr;
+}
+void build_min_heap(int arr[], int n)
+{
+    for (int i = 1; i < n; i++)
+    {
+        if (arr[i] < arr[(i - 1) / 2])
+        {
+            int j = i;
+            while (arr[j] < arr[(j - 1) / 2])
+            {
+                std::swap(arr[j], arr[(j - 1) / 2]);
+                j = (j - 1) / 2;
+            }
+        }
+    }
+}
+int* heap_sort_desc(int* arr, int n)
+{
+    if (n<=1)
+        return arr;
+    build_min_heap(arr, n);
+
+    for (int i = n - 1; i > 0; i--)
+    {
+        std::swap(arr[0], arr[i]);
+        int j = 0, index;
+        do
+        {
+            index = (2 * j + 1);
+
+            if (index < (i - 1) && arr[index] > arr[index + 1])
+                index++;
+
+            if (index < i && arr[j] > arr[index])
                 std::swap(arr[j], arr[index]);
 
             j = index;

@@ -36,7 +36,7 @@ void block_sort::sort_16() {
     }
     vec.resize(stream_count/2); //delete extra threads
 
-    //merge matrix scheme
+    //separate matrix scheme
     std::vector <std::vector <std::pair<int, int>>> indexes =
             {
                     {{0,1}, {3,2}, {4,5}, {7,6}, {8,9},{11,10}, {12,13}, {15,14}},  //1
@@ -50,7 +50,7 @@ void block_sort::sort_16() {
                     {{0,2}, {1,3}, {4,6}, {5,7},{8,10},{9,11},{12,14}, {13,15}},    //9
                     {{0,1}, {2,3}, {4,5}, {6,7},{8,9},{10,11},{12,13}, {14,15}}     //10
             };
-    //network merge using default merge from merge sor
+    //network merge using default merge from separate sor
     for (int g=0;g<10;g++) {
         for (int i = 0; i < stream_count/2; i++) {
             int first_pair_val  = indexes[g][i].first;

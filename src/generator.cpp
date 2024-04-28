@@ -1,20 +1,11 @@
 #include "generator.h"
 
-template <class T> void array_generator_(T *arr, int n)
-{
-    srand(time(NULL));
-    for (auto c : arr)
-    {
-        //c = rand() % 99 + 1;
-    }
-}
-
 void array_generator(int* arr, int n)
 {
     srand(time(NULL));
     for (int i = 0; i < NUM_COUNT; i++)
     {
-        arr[i] = rand() % 999 + 1;
+        arr[i] = rand() % MAX_NUM + 1;
     }
 }
 void random_numbers_at_file(std::string file_name)
@@ -26,9 +17,12 @@ void random_numbers_at_file(std::string file_name)
         std::cout << "Error with opening file!";
         return;
     }
-    for (size_t i = 0; i < NUM_COUNT; i++)
+    std::random_device rd;
+    std::mt19937 mt(rd());
+    std::uniform_int_distribution<int> dist(1, MAX_NUM);
+    for (int i = 0;i < NUM_COUNT; i++)
     {
-        out << (rand() % 10000 + 1) << " ";
+         out << (dist(mt)) << " ";
     }
     out.close();
     std::cout << "File filled with numbers\n";

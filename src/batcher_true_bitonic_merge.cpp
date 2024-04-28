@@ -2,7 +2,7 @@
 
 void batcher_true_bitonic_merge::merge(const unsigned int &start1, const unsigned int &start2) {
     //end index included
-    //merge 2 bitonic sequences into 2 bitonic sequences
+    //separate 2 bitonic sequences into 2 bitonic sequences
 
     if (arr[start1] > arr[start2])
     {
@@ -13,7 +13,7 @@ void batcher_true_bitonic_merge::merge(const unsigned int &start1, const unsigne
 batcher_true_bitonic_merge::batcher_true_bitonic_merge(){
     arr = new int[NUM_COUNT];
     arr_size = NUM_COUNT;
-    //merge matrix scheme - идем по строкам - каждая строка - "ступень сети"
+    //separate matrix scheme - идем по строкам - каждая строка - "ступень сети"
 };
 struct sort_asc_desc : public MT::Task {
     sort_asc_desc(const std::string &description, int *arr, const int arr_size, int start, bool is_asc)

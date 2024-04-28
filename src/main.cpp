@@ -31,8 +31,8 @@ void check_std_sort_time()
 
 int main()
 {
-    //block_sort bs;
-    //bs.sort_16();
+    block_sort bs;
+    bs.sort_16();
 
     SampleSort ss;
     ss.sort();

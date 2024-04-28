@@ -4,8 +4,10 @@
 #include <chrono>
 
 #include "timer_common.h"
-#include "batcher_default_merge.h"
-#include "batcher_true_merge.h"
+#include "block_sort.h"
+#include "batcher_true_bitonic_merge.h"
+#include "batcher_recursive.h"
+#include "SampleSort.h"
 
 void check_std_sort_time()
 {
@@ -29,23 +31,13 @@ void check_std_sort_time()
 
 int main()
 {
-    //batcher_default_merge b;
-    //b.sort_16();
-    //check_std_sort_time();
+    //block_sort bs;
+    //bs.sort_16();
 
-    batcher_true_merge btm;
-    btm.sort_16();
-    //btm.print_array();
+    SampleSort ss;
+    ss.sort();
 
     check_std_sort_time();
-
-    //int a[] = {3,6,11,33,22,91,1,44,2, 0};
-    //heap_sort_desc(a,10);
-    //for (auto c : a)
-    //{
-    //    std::cout << c << " ";
-    //}
-
 
     return 0;
 }

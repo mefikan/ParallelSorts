@@ -1,24 +1,12 @@
-#include "batcher_true_merge.h"
+#include "block_sort.h"
 
-void batcher_true_merge::merge(const unsigned int &start1, const unsigned int &start2) {
-    //end index included
-    //merge 2 bitonic sequences into 2 bitonic sequences
-    for (int i=0;i<count_per_piece;i++)
-    {
-        if (arr[start1 + i] > arr[start2 + i])
-        {
-            std::swap(arr[start1 + i], arr[start2 + i]);
-        }
-    }
-}
-
-void batcher_true_merge::sort_16() {
+void block_sort::sort_16() {
     count_per_piece = ceil(arr_size/16.0);
     //num_generate(); //can be chosen to generate array here, not in the file
     random_numbers_at_file("in.txt");
     file_read(arr, "in.txt");
     stream_count=16;
-    timer_common *timer = new timer_common;
+    auto timer = new timer_common;
 
     //add zeroes to make piece sizes equal
     unsigned int count_added_zeroes = abs(arr_size - count_per_piece*16);
@@ -34,27 +22,19 @@ void batcher_true_merge::sort_16() {
     delete []arr;
     arr = buf;
     arr_size = NUM_COUNT + count_added_zeroes;
-    //std::cout << "1) now size is " << arr_size << "\n2) count_per_piece "<< count_per_piece << "\n3) count_added_zeroes is "<< count_added_zeroes << std::endl;
+    std::cout << "1) now size is " << arr_size << "\n2) count_per_piece "<< count_per_piece << "\n3) count_added_zeroes is "<< count_added_zeroes << std::endl;
 
     //main sort
     std::vector<std::thread> vec(stream_count);
-    /*for (int i=0;i<stream_count;i++)
+    for (int i=0;i<stream_count;i++)
     {
-        if (i%2==0) {
-            vec[i] = std::thread(heap_sort_asc, &arr[i * count_per_piece], count_per_piece);
-        }
-        else
-        {
-            vec[i] = std::thread(heap_sort_desc, &arr[i*count_per_piece], count_per_piece);
-        }
-
+        vec[i] = std::thread(heap_sort_asc, &arr[i * count_per_piece], count_per_piece);
     }
     for (int i=0;i<stream_count;i++)
     {
         vec[i].join(); //join means that we wait here when processes will end their work.
     }
-    vec.resize(stream_count/2); //delete extra threads*/
-    //print_array(); //debug
+    vec.resize(stream_count/2); //delete extra threads
 
     //merge matrix scheme
     std::vector <std::vector <std::pair<int, int>>> indexes =
@@ -70,13 +50,12 @@ void batcher_true_merge::sort_16() {
                     {{0,2}, {1,3}, {4,6}, {5,7},{8,10},{9,11},{12,14}, {13,15}},    //9
                     {{0,1}, {2,3}, {4,5}, {6,7},{8,9},{10,11},{12,13}, {14,15}}     //10
             };
-    //network merge
+    //network merge using default merge from merge sor
     for (int g=0;g<10;g++) {
         for (int i = 0; i < stream_count/2; i++) {
             int first_pair_val  = indexes[g][i].first;
             int second_pair_val  = indexes[g][i].second;
-            vec[i] = std::thread([this](int first_pair_val, int second_pair_val){
-                this->merge(first_pair_val * this->count_per_piece, second_pair_val * this->count_per_piece);}, first_pair_val, second_pair_val);
+            vec[i] = std::thread([this](int first_pair_val, int second_pair_val){this->merge_2_arrays(first_pair_val*this->count_per_piece, second_pair_val*this->count_per_piece);}, first_pair_val, second_pair_val);
         }
         for (int j=0;j<stream_count/2;j++) {
             vec[j].join();
@@ -92,14 +71,52 @@ void batcher_true_merge::sort_16() {
         std::cout << "Not sorted!\n";
     }
     file_write(arr, "out.txt");
-    print_array();
     delete [] arr;
 }
-
-void batcher_true_merge::print_array() {
+void block_sort::num_generate() {
+    std::random_device rd;
+    std::mt19937 mt(rd());
+    std::uniform_int_distribution<int> dist(1, 100000);
+    for (int i = 0;i < arr_size; i++)
+    {
+        arr[i] = (dist(mt));
+    }
+    std::cout << "Numbers generated!\n";
+}
+void block_sort::merge_2_arrays(const unsigned int &start1, const unsigned int &start2) {
+    //end index included
+    //first will have the biggest elements part
+    std::vector <int> buffer(count_per_piece*2);
+    int ind1, ind2, i = 0;
+    for ( ind1 = start1, ind2 = start2 ;ind1 < count_per_piece + start1 && ind2 < count_per_piece + start2; )
+    {
+        if (arr[ind1] < arr[ind2])
+        {
+            buffer[i++] = arr[ind1++];
+        }
+        else
+        {
+            buffer[i++] = arr[ind2++];
+        }
+    }
+    while (ind1 < count_per_piece + start1)
+    {
+        buffer[i++] = arr[ind1++];
+    }
+    while (ind2 < count_per_piece + start2)
+    {
+        buffer[i++] = arr[ind2++];
+    }
+    for (int j = 0; j < count_per_piece; j++)
+    {
+        arr[j+start1] = buffer[j];
+        arr[j+start2] = buffer[j+count_per_piece];
+    }
+}
+void block_sort::print_array() {
     for (int i=0;i<arr_size;i++)
     {
-        std::cout << (i!=0 && i%count_per_piece==0 ?  "\n" :  "");
+        //std::cout << (i!=0 && i%count_per_piece==0 ?  "\n" :  "");
         std::cout << std::setw(3) << arr[i] << " ";
     }
     std::cout << "\n\n";

@@ -3,9 +3,10 @@
 
 
 #include <string>
+#include <cmath>
 
 namespace {
-    const int NUM_COUNT = 16;
+    const int NUM_COUNT = 10;
     const std::string FILE_NAME = "file.txt";
 }
 

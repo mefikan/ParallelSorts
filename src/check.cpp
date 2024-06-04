@@ -11,3 +11,14 @@ bool is_array_sorted(int* array, int n)
     }
     return 1;
 }
+bool is_array_sorted(std::vector<int> &array, int n)
+{
+    int prev = array[0];
+    for (int i = 1; i < n; i++)
+    {
+        if (array[i] < prev || array[i]<0)
+            return 0;
+        prev = array[i];
+    }
+    return 1;
+}

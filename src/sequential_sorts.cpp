@@ -15,24 +15,6 @@ void build_max_heap(int arr[], int n)
         }
     }
 }
-void shell_sort(int a[], int n)
-{
-    int step, temp;
-    for (step = n / 2; step > 0; step /= 2)
-    {
-        for (int i = step; i < n; i++)
-        {
-            temp = a[i];
-            int j;
-            for (j = i; j >= step && a[j - step] > temp; j -= step)
-            {
-                a[j] = a[j - step];
-            }
-            a[j] = temp;
-
-        }
-    }
-}
 void heap_sort_asc(int* arr, int n)
 {
     if (n<=1)
@@ -59,6 +41,25 @@ void heap_sort_asc(int* arr, int n)
     }
     return;
 }
+
+void shell_sort(int a[], int n)
+{
+    int step, temp;
+    for (step = n / 2; step > 0; step /= 2)
+    {
+        for (int i = step; i < n; i++)
+        {
+            temp = a[i];
+            int j;
+            for (j = i; j >= step && a[j - step] > temp; j -= step)
+            {
+                a[j] = a[j - step];
+            }
+            a[j] = temp;
+
+        }
+    }
+}
 void build_min_heap(int arr[], int n)
 {
     for (int i = 1; i < n; i++)
@@ -74,6 +75,7 @@ void build_min_heap(int arr[], int n)
         }
     }
 }
+
 void heap_sort_desc(int* arr, int n)
 {
     if (n<=1)
@@ -100,6 +102,7 @@ void heap_sort_desc(int* arr, int n)
     }
     return;
 }
+
 void heap_sort_asc_(std::vector<int> &arr, int n)
 {
     if (n<=1)

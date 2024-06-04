@@ -1,8 +1,8 @@
 #include "batcher_recursive.h"
+#include <mutex>
 
 using namespace std;
 
-// Функция для слияния двух подмассивов
 void bitonicMerge(int *arr, int low, int count, bool dir) {
     if (count > 1) {
         int k = count / 2;
@@ -13,20 +13,13 @@ void bitonicMerge(int *arr, int low, int count, bool dir) {
                 swap(arr[i], arr[i + k]);
             }
         }
-        bitonicMerge(arr, low, k, dir);
-        bitonicMerge(arr, low + k, k, dir);
+        bitonicMerge(arr,low,k,dir);
+        bitonicMerge(arr,low+k,k,dir);
     }
 }
 
-// Функция для сортировки битонной последовательности
 void bitonicSort(int *arr, int low, int count, bool dir) {
     if (count > 1) {
-        if (count <= 1024) {
-            // Если количество элементов небольшое, просто сортируем их
-            sort(&arr[0] + low, &arr[0] + low + count);
-            return;
-        }
-
         int k = count / 2;
 
         // Создаем потоки для параллельной сортировки
@@ -35,41 +28,61 @@ void bitonicSort(int *arr, int low, int count, bool dir) {
 
         firstHalf.join();
         secondHalf.join();
-
-        bitonicMerge(arr, low, count, dir);
     }
+    bitonicMerge(arr, low, count, dir);
 }
 
-// Функция для вызова сортировки
-void sort(int *arr) {
-    int n = NUM_COUNT;
-    bitonicSort(arr, 0, n, true);
-}
+QString batcher_recursive_init(int size) {
+    QString result= "";
 
-int batcher_recursive_init() {
-    int *arr = new int[NUM_COUNT];
-    for (int i = 0; i < NUM_COUNT; ++i) {
-        arr[i] = rand() % 100 + 1;
-    }
+    int *arr = new int[size];
+    file_read(arr,"in.txt", size);
+    int now_size = size;
+    result += "Array size is " + QString::number(size) + "\n";
 
     // Проверяем, что размер массива является кратным 2
-    if ((NUM_COUNT & (NUM_COUNT - 1)) != 0) {
-        cout << "Размер массива не является кратным 2." << endl;
-        return 1;
+    int *buf;
+    int count_added_zeroes = 0;
+    if ((size & (size - 1)) != 0) {
+        int start_num = 1;
+        int next_num = start_num*2;
+        while (!(size>start_num && size<next_num)){
+            start_num*=2;
+            next_num*=2;
+        }
+        count_added_zeroes = next_num-size;
+        result += "Array size is not a power of 2\n"
+                  "New array size "  + QString::number(next_num) + "\n"
+                  "Zeroes added " + QString::number(count_added_zeroes) + "\n";
+
+        buf = new int[next_num];
+        for (int i=0;i<count_added_zeroes;i++)
+        {
+            buf[i] = 0;
+        }
+        for (int i=0; i<size;i++)
+        {
+            buf[count_added_zeroes+i] = arr[i];
+        }
+        delete []arr;
+        arr = buf;
+        now_size = next_num;
     }
+    //Запуск основного алгоритма сортировки и таймера
+    timer_common *timer = new timer_common;
+    bitonicSort(arr, 0, now_size, true);
+    result += QString::number(timer->timer_stop()*1e-9) + "sec\n";
+    delete timer;
 
-    timer_common *timer_ = new timer_common;
-    sort(arr);
-    delete timer_;
-
-    if (is_array_sorted(arr, NUM_COUNT))
+    //Проверка массива, отсортирован ли он
+    if (is_array_sorted(arr, now_size))
     {
-        std::cout << "Sorted!\n";
+        result += "CHECK: Array is sorted";
     }
     else
     {
-        std::cout << "Not sorted!\n";
+        result += "CHECK: Array is NOT sorted";
     }
-
-    return 0;
+    file_write(&arr[count_added_zeroes], "out.txt", size);
+    return result;
 }

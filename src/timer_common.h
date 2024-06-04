@@ -13,6 +13,7 @@ class timer_common
 	std::chrono::high_resolution_clock clock;
 public:
 	timer_common();
+    double timer_stop();
 	~timer_common();
 };
 

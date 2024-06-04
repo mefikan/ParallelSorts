@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file>stonks.png</file>
+    </qresource>
+</RCC>
